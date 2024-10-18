@@ -1,4 +1,4 @@
-// WeatherResponse.swift (обновленный)
+// WeatherResponse.swift
 import Foundation
 
 struct WeatherResponse: Decodable {

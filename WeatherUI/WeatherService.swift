@@ -1,10 +1,10 @@
-// WeatherService.swift (обновленный)
+// WeatherService.swift
 import Foundation
 import Alamofire
 import CoreLocation
 
 class WeatherService {
-    private let apiKey = "963e94c58a124972bb185043240410"
+    private let apiKey = "963e94c58a124972bb185043240410" 
 
     func fetchWeather(for location: CLLocationCoordinate2D, completion: @escaping (Result<WeatherResponse, Error>) -> Void) {
         let url = "https://api.weatherapi.com/v1/forecast.json"

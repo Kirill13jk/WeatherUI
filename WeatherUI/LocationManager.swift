@@ -1,6 +1,7 @@
 // LocationManager.swift
 import Foundation
 import CoreLocation
+import Combine
 
 class LocationManager: NSObject, ObservableObject {
     private let manager = CLLocationManager()
@@ -26,20 +27,28 @@ class LocationManager: NSObject, ObservableObject {
 
 extension LocationManager: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        self.authorizationStatus = manager.authorizationStatus
-        if authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways {
-            requestLocation()
-        } else if authorizationStatus == .denied || authorizationStatus == .restricted {
-            isDenied = true
+        DispatchQueue.main.async {
+            self.authorizationStatus = manager.authorizationStatus
+            print("Статус авторизации изменен: \(self.authorizationStatus.rawValue)")
+            if self.authorizationStatus == .authorizedWhenInUse || self.authorizationStatus == .authorizedAlways {
+                self.requestLocation()
+            } else if self.authorizationStatus == .denied || self.authorizationStatus == .restricted {
+                self.isDenied = true
+            }
         }
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        self.location = locations.first
+        DispatchQueue.main.async {
+            self.location = locations.first
+            print("Местоположение обновлено: \(String(describing: self.location))")
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Failed to get location: \(error.localizedDescription)")
-        isDenied = true
+        print("Не удалось получить местоположение: \(error.localizedDescription)")
+        DispatchQueue.main.async {
+            self.isDenied = true
+        }
     }
 }

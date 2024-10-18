@@ -14,7 +14,6 @@ class HourlyWeather: Identifiable {
     var precipitation: Double
     var cloudiness: Int
     var feelsLike: Double
-    weak var weatherData: WeatherData?
 
     var isCurrentHour: Bool {
         let formatter = DateFormatter()

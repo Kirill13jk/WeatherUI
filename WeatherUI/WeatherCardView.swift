@@ -1,4 +1,4 @@
-// WeatherCardView.swift (обновленный)
+// WeatherCardView.swift
 import SwiftUI
 
 struct WeatherCardView: View {

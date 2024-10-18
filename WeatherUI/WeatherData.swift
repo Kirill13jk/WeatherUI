@@ -1,9 +1,13 @@
-// WeatherData.swift (обновленный)
+// WeatherData.swift
 import Foundation
 import SwiftData
 
 @Model
-class WeatherData: Identifiable {
+class WeatherData: Identifiable, Equatable {
+    static func == (lhs: WeatherData, rhs: WeatherData) -> Bool {
+        lhs.id == rhs.id
+    }
+
     var id = UUID()
     var cityName: String
     var country: String
@@ -56,5 +60,11 @@ class WeatherData: Identifiable {
         if let forecastDay = response.forecast.forecastday.first {
             self.hourlyForecast = forecastDay.hour.map { HourlyWeather(from: $0) }
         }
+    }
+}
+
+extension WeatherData: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

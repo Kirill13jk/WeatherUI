@@ -2,36 +2,28 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject private var viewModel: WeatherViewModel
+    @EnvironmentObject var viewModel: WeatherViewModel
     @State private var showingAlert = false
     @State private var newCityName = ""
     @State private var showHourly = false
-    @State private var selectedWeatherData: WeatherData?
-
-    init(locationManager: LocationManager) {
-        _viewModel = StateObject(wrappedValue: WeatherViewModel(locationManager: locationManager))
-    }
+    @State private var selectedWeatherID: UUID?
 
     var body: some View {
         NavigationView {
             if !viewModel.weatherDataList.isEmpty {
                 VStack {
-                    TabView(selection: $selectedWeatherData) {
+                    TabView(selection: $selectedWeatherID) {
                         ForEach(viewModel.weatherDataList) { weather in
                             VStack {
                                 WeatherCardView(weather: weather)
                                 HourlyForecastHorizontalView(weatherData: weather)
                             }
-                            .tag(weather)
+                            .tag(weather.id)
                         }
                     }
-                    .onAppear {
-                        selectedWeatherData = viewModel.weatherDataList.first
-                    }
-                    
-                    }
                     .tabViewStyle(PageTabViewStyle())
-                    .frame(height: 600) // Уменьшение размера слайдера
+                    .frame(height: 400)
+                    .padding(.horizontal, 16)
 
                     Button(action: {
                         showHourly = true
@@ -43,58 +35,94 @@ struct MainView: View {
                             .foregroundColor(.white)
                             .cornerRadius(8)
                     }
-                    .padding()
+                    .padding(.horizontal, 16)
 
                     Spacer()
                 }
-                .navigationBarItems(
-                    leading: NavigationLink(destination: SettingsView()) {
-                        Image(systemName: "gear")
-                    },
-                    trailing: Button(action: {
-                        showingAlert = true
-                    }) {
-                        Image(systemName: "plus")
-                    }
-                )
-                .sheet(isPresented: $showHourly) {
-                    if let selectedWeather = selectedWeatherData {
-                        HourlyForecastView(weatherData: selectedWeather)
-                    }
-                }
-                
-                .alert("Добавить город", isPresented: $showingAlert) {
-                    TextField("Название города", text: $newCityName)
-                    Button("Отмена", role: .cancel) {}
-                    Button("ОК") {
-                        viewModel.addCity(named: newCityName)
-                        newCityName = ""
-                    }
-                }
-                .onAppear {
-                    selectedWeatherData = viewModel.weatherDataList.first
-                }
-            } else {
-                Text("Нет данных для отображения")
-                    .navigationBarItems(
-                        leading: NavigationLink(destination: SettingsView()) {
+                .navigationBarTitle("Погода", displayMode: .inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        NavigationLink(destination: SettingsView()) {
                             Image(systemName: "gear")
-                        },
-                        trailing: Button(action: {
+                        }
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
                             showingAlert = true
                         }) {
                             Image(systemName: "plus")
                         }
-                    )
-                    .alert("Добавить город", isPresented: $showingAlert) {
-                        TextField("Название города", text: $newCityName)
-                        Button("Отмена", role: .cancel) {}
-                        Button("ОК") {
-                            viewModel.addCity(named: newCityName)
-                            newCityName = ""
+                    }
+                }
+                .sheet(isPresented: $showHourly) {
+                    if let selectedID = selectedWeatherID,
+                       let selectedWeather = viewModel.weatherDataList.first(where: { $0.id == selectedID }) {
+                        HourlyForecastView(weatherData: selectedWeather)
+                    } else {
+                        EmptyView()
+                    }
+                }
+                .alert("Добавить город", isPresented: $showingAlert) {
+                    TextField("Название города", text: $newCityName)
+                    Button("Отмена", role: .cancel) {}
+                    Button("ОК") {
+                        viewModel.addCity(named: newCityName) { newID in
+                            if let newID = newID {
+                                selectedWeatherID = newID
+                            }
+                        }
+                        newCityName = ""
+                    }
+                }
+            } else {
+                VStack {
+                    Spacer()
+                    Text("Нет данных для отображения")
+                        .font(.title)
+                        .padding()
+
+                    Button(action: {
+                        showingAlert = true
+                    }) {
+                        Text("Добавить город")
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.orange)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                    .padding(.horizontal, 16) 
+
+                    Spacer()
+                }
+                .navigationBarTitle("Погода", displayMode: .inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        NavigationLink(destination: SettingsView()) {
+                            Image(systemName: "gear")
                         }
                     }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            showingAlert = true
+                        }) {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
+                .alert("Добавить город", isPresented: $showingAlert) {
+                    TextField("Название города", text: $newCityName)
+                    Button("Отмена", role: .cancel) {}
+                    Button("ОК") {
+                        viewModel.addCity(named: newCityName) { newID in
+                            if let newID = newID {
+                                selectedWeatherID = newID
+                            }
+                        }
+                        newCityName = ""
+                    }
+                }
             }
         }
     }
-
+}

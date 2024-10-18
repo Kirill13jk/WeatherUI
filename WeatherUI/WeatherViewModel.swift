@@ -1,4 +1,4 @@
-// WeatherViewModel.swift (обновленный)
+// WeatherViewModel.swift
 import Foundation
 import CoreLocation
 import Combine
@@ -9,6 +9,12 @@ class WeatherViewModel: ObservableObject {
     private let weatherService = WeatherService()
     private let geocodingService = GeocodingService()
     private var cancellables = Set<AnyCancellable>()
+
+    // Настройки
+    @Published var temperatureUnit: String = "C"
+    @Published var windSpeedUnit: String = "Km"
+    @Published var timeFormat: String = "24h"
+    @Published var notificationsEnabled: Bool = true
 
     init(locationManager: LocationManager) {
         self.locationManager = locationManager
@@ -41,18 +47,22 @@ class WeatherViewModel: ObservableObject {
         }
     }
 
-    func addCity(named cityName: String) {
+    func addCity(named cityName: String, completion: @escaping (UUID?) -> Void) {
         geocodingService.geocode(address: cityName) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let coordinate):
                     self?.fetchWeather(for: coordinate)
+                    if let newWeather = self?.weatherDataList.last {
+                        completion(newWeather.id)
+                    } else {
+                        completion(nil)
+                    }
                 case .failure(let error):
-                    print("Geocoding error: \(error.localizedDescription)")
-                    
+                    print("Ошибка геокодирования: \(error.localizedDescription)")
+                    completion(nil)
                 }
             }
         }
     }
-
 }

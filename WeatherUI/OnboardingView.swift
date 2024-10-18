@@ -7,15 +7,15 @@ struct OnboardingView: View {
 
     var body: some View {
         VStack(spacing: 30) {
-            Text("Please allow access to your location to display weather information for your region.")
+            Text("Разрешите доступ к вашему местоположению для отображения погоды в вашем регионе.")
                 .multilineTextAlignment(.center)
                 .padding()
 
-            HStack(spacing: 20) {
+            VStack(spacing: 20) { 
                 Button(action: {
                     locationManager.requestAuthorization()
                 }) {
-                    Text("Allow Access")
+                    Text("Разрешить доступ")
                         .padding()
                         .frame(maxWidth: .infinity)
                         .background(Color.blue)
@@ -27,7 +27,7 @@ struct OnboardingView: View {
                     isAuthorized = true
                     locationManager.isDenied = true
                 }) {
-                    Text("Deny")
+                    Text("Запретить")
                         .padding()
                         .frame(maxWidth: .infinity)
                         .background(Color.gray)

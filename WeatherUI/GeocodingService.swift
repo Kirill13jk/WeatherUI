@@ -22,7 +22,7 @@ class GeocodingService {
                     if let coordinate = self.parseCoordinate(from: value) {
                         completion(.success(coordinate))
                     } else {
-                        completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to get coordinates"])))
+                        completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Не удалось получить координаты"])))
                     }
                 case .failure(let error):
                     completion(.failure(error))
