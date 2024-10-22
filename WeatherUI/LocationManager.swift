@@ -1,8 +1,9 @@
 // LocationManager.swift
+
 import Foundation
 import CoreLocation
 
-class LocationManager: NSObject, ObservableObject {
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
 
     @Published var authorizationStatus: CLAuthorizationStatus
@@ -22,9 +23,7 @@ class LocationManager: NSObject, ObservableObject {
     func requestLocation() {
         manager.requestLocation()
     }
-}
 
-extension LocationManager: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         self.authorizationStatus = manager.authorizationStatus
         if authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways {

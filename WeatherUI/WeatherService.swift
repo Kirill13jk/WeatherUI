@@ -1,4 +1,5 @@
-// WeatherService.swift (обновленный)
+// WeatherService.swift
+
 import Foundation
 import Alamofire
 import CoreLocation
@@ -11,7 +12,7 @@ class WeatherService {
         let parameters: [String: Any] = [
             "key": apiKey,
             "q": "\(location.latitude),\(location.longitude)",
-            "days": "1",
+            "days": "7",
             "aqi": "no",
             "alerts": "no",
             "lang": "ru"

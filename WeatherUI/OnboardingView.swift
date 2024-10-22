@@ -1,9 +1,10 @@
 // OnboardingView.swift
+
 import SwiftUI
 
 struct OnboardingView: View {
     @Binding var isAuthorized: Bool
-    @ObservedObject var locationManager: LocationManager
+    @EnvironmentObject var locationManager: LocationManager
 
     var body: some View {
         VStack(spacing: 30) {

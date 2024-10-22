@@ -1,10 +1,19 @@
-// WeatherViewModel.swift (обновленный)
+// WeatherViewModel.swift
+
 import Foundation
 import CoreLocation
 import Combine
 
 class WeatherViewModel: ObservableObject {
     @Published var weatherDataList: [WeatherData] = []
+    @Published var temperatureUnit: String = "C"
+    @Published var windSpeedUnit: String = "м/с"
+    @Published var visibilityUnit: String = "Km"
+    @Published var timeFormat: String = "24h"
+    @Published var dateFormat: String = "mm/dd/yy"
+    @Published var notificationsEnabled: Bool = false
+    @Published var dayWeatherEnabled: Bool = false
+
     private let locationManager: LocationManager
     private let weatherService = WeatherService()
     private let geocodingService = GeocodingService()
@@ -21,7 +30,7 @@ class WeatherViewModel: ObservableObject {
                 if let location = location {
                     self?.fetchWeather(for: location.coordinate)
                 } else if self?.locationManager.isDenied == true {
-                    // Не удалось получить местоположение
+                    // Handle location denied
                 }
             }
             .store(in: &cancellables)
@@ -35,7 +44,7 @@ class WeatherViewModel: ObservableObject {
                     let data = WeatherData(from: response)
                     self?.weatherDataList.append(data)
                 case .failure(let error):
-                    print("Ошибка при получении погоды: \(error.localizedDescription)")
+                    print("Error fetching weather: \(error.localizedDescription)")
                 }
             }
         }
@@ -49,10 +58,8 @@ class WeatherViewModel: ObservableObject {
                     self?.fetchWeather(for: coordinate)
                 case .failure(let error):
                     print("Geocoding error: \(error.localizedDescription)")
-                    
                 }
             }
         }
     }
-
 }

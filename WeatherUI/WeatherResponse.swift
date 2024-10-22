@@ -1,4 +1,5 @@
-// WeatherResponse.swift (обновленный)
+// WeatherResponse.swift
+
 import Foundation
 
 struct WeatherResponse: Decodable {
@@ -16,6 +17,7 @@ struct WeatherResponse: Decodable {
         let temp_c: Double
         let condition: Condition
         let wind_kph: Double
+        let wind_dir: String
         let humidity: Int
         let cloud: Int
         let precip_mm: Double
@@ -40,11 +42,26 @@ struct WeatherResponse: Decodable {
             struct Day: Decodable {
                 let maxtemp_c: Double
                 let mintemp_c: Double
+                let avgtemp_c: Double
+                let maxwind_kph: Double
+                let uv: Double
+                let condition: Condition
+                let daily_chance_of_rain: Double
+                let daily_will_it_rain: Int
+                let daily_chance_of_snow: Double
+                let daily_will_it_snow: Int
+
+                struct Condition: Decodable {
+                    let text: String
+                    let icon: String
+                    let code: Int
+                }
             }
 
             struct Astro: Decodable {
                 let sunrise: String
                 let sunset: String
+                let moon_phase: String
             }
 
             struct Hour: Decodable {

@@ -1,4 +1,3 @@
-// HourlyForecastHorizontalView.swift
 import SwiftUI
 
 struct HourlyForecastHorizontalView: View {
@@ -8,15 +7,18 @@ struct HourlyForecastHorizontalView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
                 ForEach(weatherData.hourlyForecast.sorted { $0.time < $1.time }) { hour in
-                    VStack {
+                    VStack(spacing: 5) {
                         Text(hour.timeFormatted)
-                            .font(.caption)
+                            .font(.caption2)
                         Image(systemName: hour.weatherIcon)
                             .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
                         Text("\(Int(hour.temperature))°")
-                            .font(.headline)
+                            .font(.caption2)
                     }
-                    .padding()
+                    .padding(5)
                     .background(hour.isCurrentHour ? Color.blue : Color.clear)
                     .cornerRadius(10)
                     .foregroundColor(hour.isCurrentHour ? .white : .primary)

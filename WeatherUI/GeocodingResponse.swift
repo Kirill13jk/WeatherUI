@@ -1,4 +1,5 @@
 // GeocodingResponse.swift
+
 import Foundation
 import CoreLocation
 

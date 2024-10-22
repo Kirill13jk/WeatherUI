@@ -2,12 +2,40 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>NSLocationWhenInUseUsageDescription</key>
-			<string>Ваше местоположение необходимо для отображения погоды в вашем регионе.</string>
-		</dict>
-	</array>
+    <!-- Идентификатор пакета -->
+    <key>CFBundleIdentifier</key>
+    <string>com.example.WeatherApp</string>
+
+    <!-- Название приложения -->
+    <key>CFBundleName</key>
+    <string>WeatherApp</string>
+
+    <!-- Версия приложения -->
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+
+    <!-- Версия сборки -->
+    <key>CFBundleVersion</key>
+    <string>1</string>
+
+    <!-- Информация об использовании данных местоположения -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Это приложение использует ваше местоположение для предоставления точного прогноза погоды для вашего региона.</string>
+    
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Мы используем данные о вашем местоположении, чтобы показывать прогноз погоды, когда вы используете приложение или даже когда оно работает в фоновом режиме.</string>
+
+    <!-- Другие ключи, если они есть -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.example.weatherapp</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>weatherapp</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

@@ -1,4 +1,5 @@
-// ContentView.swift (обновленный)
+// ContentView.swift
+
 import SwiftUI
 
 struct ContentView: View {
@@ -7,9 +8,11 @@ struct ContentView: View {
 
     var body: some View {
         if isAuthorized {
-            MainView(locationManager: locationManager)
+            MainView()
+                .environmentObject(locationManager)
         } else {
-            OnboardingView(isAuthorized: $isAuthorized, locationManager: locationManager)
+            OnboardingView(isAuthorized: $isAuthorized)
+                .environmentObject(locationManager)
         }
     }
 }

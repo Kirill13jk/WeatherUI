@@ -1,4 +1,5 @@
 // HourlyWeather.swift
+
 import Foundation
 import SwiftData
 
@@ -16,13 +17,18 @@ class HourlyWeather: Identifiable {
     var feelsLike: Double
     weak var weatherData: WeatherData?
 
-    var isCurrentHour: Bool {
+    var hour: Int {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
         if let date = formatter.date(from: time) {
-            return Calendar.current.isDate(Date(), equalTo: date, toGranularity: .hour)
+            return Calendar.current.component(.hour, from: date)
         }
-        return false
+        return 0
+    }
+
+    var isCurrentHour: Bool {
+        let currentHour = Calendar.current.component(.hour, from: Date())
+        return hour == currentHour
     }
 
     var timeFormatted: String {
@@ -48,7 +54,7 @@ class HourlyWeather: Identifiable {
         }
     }
 
-    init(time: String, temperature: Double, condition: String, icon: String, windSpeed: Double, windDirection: String, precipitation: Double, cloudiness: Int, feelsLike: Double) {
+    init(time: String, temperature: Double, condition: String, icon: String, windSpeed: Double, windDirection: String, precipitation: Double, cloudiness: Int, feelsLike: Double, weatherData: WeatherData? = nil) {
         self.time = time
         self.temperature = temperature
         self.condition = condition
@@ -58,19 +64,21 @@ class HourlyWeather: Identifiable {
         self.precipitation = precipitation
         self.cloudiness = cloudiness
         self.feelsLike = feelsLike
+        self.weatherData = weatherData
     }
 
-    convenience init(from hourData: WeatherResponse.Forecast.ForecastDay.Hour) {
+    convenience init(from hourData: WeatherResponse.Forecast.ForecastDay.Hour, weatherData: WeatherData? = nil) {
         self.init(
             time: hourData.time,
             temperature: hourData.temp_c,
             condition: hourData.condition.text,
             icon: hourData.condition.icon,
-            windSpeed: hourData.wind_kph / 3.6,
+            windSpeed: hourData.wind_kph / 3.6,  
             windDirection: hourData.wind_dir,
             precipitation: hourData.chance_of_rain,
             cloudiness: hourData.cloud,
-            feelsLike: hourData.feelslike_c
+            feelsLike: hourData.feelslike_c,
+            weatherData: weatherData
         )
     }
 }
